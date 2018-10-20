@@ -191,11 +191,13 @@ package com.ninooo96.unicalappar;//package com.ninooo96.unicalappar;//package co
 //}
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import static android.hardware.SensorManager.AXIS_X;
@@ -283,6 +285,12 @@ public class OrientationActivity extends Activity implements SensorEventListener
         super.onPause();
         mSensorManager.unregisterListener(this, accelerometer);
         mSensorManager.unregisterListener(this, magnetometer);
+    }
+
+
+    public void addressActivity(View view) {
+        Intent intentAddress = new Intent(OrientationActivity.this, AddressActivity.class);
+        startActivity(intentAddress);
     }
 }
 

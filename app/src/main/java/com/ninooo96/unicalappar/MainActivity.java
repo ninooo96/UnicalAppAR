@@ -16,6 +16,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Intent intentOrientation = new Intent(MainActivity.this, OrientationActivity.class);
         startActivity(intentOrientation);
+
+
 //        WebView myWebView = (WebView) findViewById(R.id.webView);
 //        myWebView.loadUrl("http://www.liceopizipalmi.gov.it/documenti.php?vedi=comunicazioni");
     }
