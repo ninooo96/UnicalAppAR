@@ -249,7 +249,7 @@ public class OrientationActivity extends Activity implements SensorEventListener
                 double roll = 180 * orientation[2] / Math.PI;
 
                 double mag = Math.sqrt((azimuth*azimuth)+(pitch*pitch)+(roll*roll));
-
+                System.out.println(azimuth+" dirz");
                 dirZ.setText("Z= "+azimuth);
                 dirY.setText("  "+mag);
             }
@@ -269,6 +269,7 @@ public class OrientationActivity extends Activity implements SensorEventListener
         dirY = findViewById(R.id.directionY);
         dirX = findViewById(R.id.directionX);
         tesla = findViewById(R.id.tesla);
+
 
     }
 
