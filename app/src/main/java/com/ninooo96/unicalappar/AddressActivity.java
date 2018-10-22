@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,12 +14,27 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.ar.core.Anchor;
+import com.google.ar.core.HitResult;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.Camera;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.SceneView;
+import com.google.ar.sceneform.math.Quaternion;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.ux.ArFragment;
 
 import java.util.List;
 import java.util.Locale;
@@ -47,31 +63,56 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     public static float[] mAccelerometer = null;
     public static float[] mGeomagnetic = null;
 
+    private SceneView sceneView;
+    private ModelRenderable cuboRenderable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_address);
+        sceneView = findViewById(R.id.scene_view);
+        sceneView.setBackgroundColor(Color.BLUE);
+
+        Camera camera = sceneView.getScene().getCamera();
+        camera.setLocalRotation(Quaternion.axisAngle(Vector3.right(), -30.0f));
 
         //Orientation
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        setContentView(R.layout.activity_orientation);
-//        dirZ = findViewById(R.id.directionZ);
+      //        dirZ = findViewById(R.id.directionZ);
 
         //Address
-        setContentView(R.layout.activity_address);
-        addr = findViewById(R.id.address);
-        bearing = findViewById(R.id.bearing);
-        azimuth = findViewById(R.id.azimuth);
+
+//        addr = findViewById(R.id.address);
+//        bearing = findViewById(R.id.bearing);
+//        azimuth = findViewById(R.id.azimuth);
         Location.distanceBetween(39.356235, 16.226965,39.366869, 16.225389, result);
         System.out.println("km "+result[0]);
         inizioPonte.setLatitude(39.356235);
         inizioPonte.setLongitude(16.226965);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ModelRenderable.builder().setSource(this, Uri.parse("cubo.sfb"))
+                    .build().thenAccept(renderable-> cuboRenderable = renderable)
+                    .exceptionally(throwable -> {
+                        System.out.println("Unable to load Renderable");
+                        return null;
+                    });
+        }
+//        Node n = new Node();
+//        n.setRenderable(cuboRenderable);
+//        HitResult hit = new HitResult();
+//        Anchor anchor = HitResult
+//        AnchorNode anchorNode = new AnchorNode(anchor);
+//        n.setEnabled(true);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        sceneView.pause();
         //Orientation
         mSensorManager.unregisterListener(this, accelerometer);
         mSensorManager.unregisterListener(this, magnetometer);
@@ -83,6 +124,11 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     @Override
     protected void onResume() {
         super.onResume();
+        try {
+            sceneView.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
         //Orientation
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
@@ -150,10 +196,10 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         String msg="Ci troviamo in coordinate ("+latitude+","+longitude+")";
         String address = (new ReverseGeocoding(this)).getCompleteAddress(latitude, longitude);
 //        String address = (new ReverseGeocoding(this)).getAddressOSM(39.364166, 16.225764);
-        addr.setText(address);
+//        addr.setText(address);
         /**Guardare appunti sul quadernino. loc sono le coordinate del polo nord magnetico*/
         bear = location.bearingTo(loc);
-        bearing.setText("Bearing: "+Float.toString(bear));
+//        bearing.setText("Bearing: "+Float.toString(bear));
         System.out.println(bear+"  "+address);
 //        TextView txt= (TextView) findViewById(R.id.locationText);
 //        txt.setText(msg);
@@ -187,7 +233,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 
                 double mag = Math.sqrt((azimuth*azimuth)+(pitch*pitch)+(roll*roll));
                 System.out.println(azimuth+" dirz");
-                this.azimuth.setText(azimuth+"");
+//                this.azimuth.setText(azimuth+"");
 //                dirZ.setText("Z= "+azimuth);
             }
         }
@@ -203,6 +249,27 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         System.out.println("Cuboooo "+Math.round(tmp));
         System.out.println(distance+" distance");
         return Math.round(tmp)+"";
+    }
+
+    public void hit(View view) {
+        Toast.makeText(this, "hit", Toast.LENGTH_LONG).show();
+        Node cubi = new Node();
+        cubi.setParent(sceneView.getScene());
+        Node n1 = new Node();
+        Node n2 = new Node();
+        n1.setRenderable(cuboRenderable);
+        n2.setRenderable(cuboRenderable);
+
+        n1.setParent(cubi); n2.setParent(cubi);
+        n1.onActivate(); n2.onActivate();
+//        ArFragment arFragment = new ArFragment();
+//        arFragment.
+        n1.setLocalPosition(new Vector3(0f,0,-1f));
+        n2.setLocalPosition(new Vector3(0f,5,-1f));
+//        HitResult hit = new HitResult();
+//        Anchor anchor = HitResult
+//        AnchorNode anchorNode = new AnchorNode(anchor);
+//        n.setEnabled(true);
     }
 
 

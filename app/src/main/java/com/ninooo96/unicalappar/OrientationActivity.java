@@ -198,6 +198,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import static android.hardware.SensorManager.AXIS_X;
@@ -219,6 +220,7 @@ public class OrientationActivity extends Activity implements SensorEventListener
     public static float[] mGeomagnetic = null;
 
     private TextView dirX, dirY, dirZ, tesla;
+    private Button button;
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
@@ -269,7 +271,7 @@ public class OrientationActivity extends Activity implements SensorEventListener
         dirY = findViewById(R.id.directionY);
         dirX = findViewById(R.id.directionX);
         tesla = findViewById(R.id.tesla);
-
+//        button = findViewById(R.id.butt);
 
     }
 
