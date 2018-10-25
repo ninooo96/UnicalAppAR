@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ninooo96.unicalappar">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.ar"
+        android:required="true"/>
     <uses-feature android:name="android.location.Geocoder"/>
     <application
         android:allowBackup="true"
@@ -17,7 +19,8 @@
         android:theme="@style/AppTheme">
         <meta-data android:name="com.google.ar.core" android:value="optional" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,6 +29,7 @@
         </activity>
         <activity android:name=".OrientationActivity"></activity>
         <activity android:name=".AddressActivity"></activity>
+        <activity android:name=".ARActivity"></activity>
     </application>
 
 </manifest>

@@ -2,27 +2,42 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.google.ar.sceneform.SceneView
-            android:id="@+id/scene_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="hit"/>
+    <!--<com.google.ar.sceneform.SceneView-->
+            <!--android:id="@+id/scene_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:onClick="hit"/>-->
         <!--android:background="@color/colorPrimary"-->
 
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/address"/>-->
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/bearing"/>-->
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/azimuth"/>-->
-    <!--</LinearLayout>-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/address"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bearing"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/azimuth"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonInizio"
+            android:onClick="pressInizio"
+            android:text="Pos. Iniziale"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="pressFine"
+            android:id="@+id/buttonFine"
+            android:text="pos. Finale"/>
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>
