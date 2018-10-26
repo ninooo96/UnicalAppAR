@@ -77,6 +77,7 @@ public class ARActivity extends AppCompatActivity {
     private final PlaneRenderer planeRenderer = new PlaneRenderer();
     private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
     private boolean isTracking, isHitting;
+    private boolean planeDetected;
 
     @Override
     protected void onCreate(Bundle savedInstancesState) {
@@ -91,8 +92,8 @@ public class ARActivity extends AppCompatActivity {
                     arFragment.onUpdate(frameTime);
                     onUpdate();
                 });
-
-        addViewRenderable();
+//
+//        addViewRenderable();
 //        try {
 ////            mBackgroundRenderer.createOnGlThread(/*context=*/this);
 ////            session.setCameraTextureName(mBackgroundRenderer.getTextureId());
@@ -135,6 +136,25 @@ public class ARActivity extends AppCompatActivity {
 //            cubo.setRenderable(cuboRenderable);
 //            cubo.select();
 //        });
+
+//        arFragment.getArSceneView()
+//                .getScene()
+//                .setOnTouchListener(
+//                        (HitTestResult hitTestResult, MotionEvent event) -> {
+//                            // If the solar system hasn't been placed yet, detect a tap and then check to see if
+//                            // the tap occurred on an ARCore plane to place the solar system.
+//                            if (!hasPlacedSolarSystem) {
+//                                return gestureDetector.onTouchEvent(event);
+//                            }
+//
+//                            // Otherwise return false so that the touch event can propagate to the scene.
+//                            return false;
+//                        });
+       /** arFragment.setOnTapArPlaneListener(
+                (ArFragment fragment, Anchor anchor, ViewRenderable renderable) -> {
+                    addNodeToScene(arFragment, anchor, renderable);
+                });*/
+
     }
 
 //    @Override
@@ -176,7 +196,7 @@ public class ARActivity extends AppCompatActivity {
         if(isTracking){
             boolean hitTestChanged = updateHitTest();
             if(hitTestChanged)
-                metodo1();
+                planeDetected = hitTestChanged;
         }
     }
 
@@ -232,7 +252,7 @@ public class ARActivity extends AppCompatActivity {
 
     private void placeViewRenderable(ArFragment fragment, Anchor anchor){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ViewRenderable.builder().setView(this,  R.layout.ar_activity).build()
+            ViewRenderable.builder().setView(this,  R.layout.info_cubo).build()
                     .thenAccept(renderable ->
                             addNodeToScene(fragment, anchor, renderable  ));
 
@@ -254,6 +274,13 @@ public class ARActivity extends AppCompatActivity {
         transformableNode.setParent(anchorNode);
         fragment.getArSceneView().getScene().addChild(anchorNode);
         transformableNode.select();
+    }
+
+    public void hitOnScreen(View view) {
+        System.out.println("CIAOOOOOOOOO");
+        Toast.makeText(this, "hitOnScreen",Toast.LENGTH_LONG).show();
+//        if(planeDetected)
+            addViewRenderable();
     }
 //    public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
 //        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
