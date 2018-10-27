@@ -1,35 +1,35 @@
-Cubo 0 Inizio: 0.0--Fine: 28.577759
-Cubo 1 Inizio: 33.1622--Fine: 53.00971
-Cubo 2 Inizio: 60.079132--Fine: 78.13912
-Cubo 3 Inizio: 83.33814--Fine: 104.52617
-Cubo 4 Inizio: 109.10804--Fine: 130.54659
-Cubo 5 Inizio: 134.64278--Fine: 155.22755
-Cubo 6 Inizio: 158.93282--Fine: 181.16815
-Cubo 12 Inizio: 307.67197--Fine: 332.01318
-Cubo 13 Inizio: 337.72116--Fine: 356.37836
-Cubo 14 Inizio: 360.79675--Fine: 383.55695
-Cubo 15 Inizio: 386.53412--Fine: 408.35544
-Cubo 16 Inizio: 413.9189--Fine: 432.96497
-Cubo 17 Inizio: 436.22998--Fine: 456.67236
-Cubo 18 Inizio: 463.39264--Fine: 483.92215
-Cubo 19 Inizio: 487.54413--Fine: 507.0051
-Cubo 20 Inizio: 510.79355--Fine: 531.0708
-Cubo 21 Inizio: 536.7095--Fine: 557.1695
-Cubo 27 Inizio: 682.6539--Fine: 709.56384
-Cubo 28 Inizio: 712.1873--Fine: 735.0756
-Cubo 29 Inizio: 742.9081--Fine: 760.361
-Cubo 30 Inizio: 764.31683--Fine: 786.5479
-Cubo 31 Inizio: 790.6589--Fine: 812.12006
-Cubo 32 Inizio: 818.8281--Fine: 835.2681
-Cubo 33 Inizio: 841.9005--Fine: 862.3017
-Cubo 34 Inizio: 866.5805--Fine: 885.55646
-Cubo 37 Inizio: 937.8584--Fine: 961.62787
-Cubo 38 Inizio: 966.7021--Fine: 987.4141
-Cubo 39 Inizio: 992.2447--Fine: 1014.6572
-Cubo 40 Inizio: 1019.52423--Fine: 1038.0325
-Cubo 41 Inizio: 1044.9387--Fine: 1065.3542
-Cubo 42 Inizio: 1068.0387--Fine: 1090.5437
-Cubo 43 Inizio: 1094.7399--Fine: 1112.7208
-Cubo 44 Inizio: 1118.5515--Fine: 1137.2222
-Cubo 45 Inizio: 1143.7212--Fine: 1165.5392
-Cubo 46 Inizio: 1168.8184--Fine: 1189.4581
+Cubo 0 Inizio: 0.0 Fine: 28.577759
+Cubo 1 Inizio: 33.1622 Fine: 53.00971
+Cubo 2 Inizio: 60.079132 Fine: 78.13912
+Cubo 3 Inizio: 83.33814 Fine: 104.52617
+Cubo 4 Inizio: 109.10804 Fine: 130.54659
+Cubo 5 Inizio: 134.64278 Fine: 155.22755
+Cubo 6 Inizio: 158.93282 Fine: 181.16815
+Cubo 12 Inizio: 307.67197 Fine: 332.01318
+Cubo 13 Inizio: 337.72116 Fine: 356.37836
+Cubo 14 Inizio: 360.79675 Fine: 383.55695
+Cubo 15 Inizio: 386.53412 Fine: 408.35544
+Cubo 16 Inizio: 413.9189 Fine: 432.96497
+Cubo 17 Inizio: 436.22998 Fine: 456.67236
+Cubo 18 Inizio: 463.39264 Fine: 483.92215
+Cubo 19 Inizio: 487.54413 Fine: 507.0051
+Cubo 20 Inizio: 510.79355 Fine: 531.0708
+Cubo 21 Inizio: 536.7095 Fine: 557.1695
+Cubo 27 Inizio: 682.6539 Fine: 709.56384
+Cubo 28 Inizio: 712.1873 Fine: 735.0756
+Cubo 29 Inizio: 742.9081 Fine: 760.361
+Cubo 30 Inizio: 764.31683 Fine: 786.5479
+Cubo 31 Inizio: 790.6589 Fine: 812.12006
+Cubo 32 Inizio: 818.8281 Fine: 835.2681
+Cubo 33 Inizio: 841.9005 Fine: 862.3017
+Cubo 34 Inizio: 866.5805 Fine: 885.55646
+Cubo 37 Inizio: 937.8584 Fine: 961.62787
+Cubo 38 Inizio: 966.7021 Fine: 987.4141
+Cubo 39 Inizio: 992.2447 Fine: 1014.6572
+Cubo 40 Inizio: 1019.52423 Fine: 1038.0325
+Cubo 41 Inizio: 1044.9387 Fine: 1065.3542
+Cubo 42 Inizio: 1068.0387 Fine: 1090.5437
+Cubo 43 Inizio: 1094.7399 Fine: 1112.7208
+Cubo 44 Inizio: 1118.5515 Fine: 1137.2222
+Cubo 45 Inizio: 1143.7212 Fine: 1165.5392
+Cubo 46 Inizio: 1168.8184 Fine: 1189.4581

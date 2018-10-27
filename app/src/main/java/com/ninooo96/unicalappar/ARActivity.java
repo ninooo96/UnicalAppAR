@@ -51,6 +51,7 @@ import com.ninooo96.unicalappar.common.rendering.PointCloudRenderer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -78,15 +79,18 @@ public class ARActivity extends AppCompatActivity {
     private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
     private boolean isTracking, isHitting;
     private boolean planeDetected;
+    private ListaCubi lc;
+    private ListIterator li;
 
     @Override
     protected void onCreate(Bundle savedInstancesState) {
         super.onCreate(savedInstancesState);
-
-//        if (!checkIsSupportedDeviceOrFinish(this)) {
-//            return;
-//        }
         setContentView(R.layout.ar_activity);
+
+        lc = new ListaCubi(this);
+        lc.toString();
+        li = lc.getCubi().listIterator();
+
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_frag);
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
                     arFragment.onUpdate(frameTime);

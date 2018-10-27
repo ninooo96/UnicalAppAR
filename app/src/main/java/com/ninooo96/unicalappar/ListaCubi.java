@@ -12,21 +12,7 @@ public class ListaCubi {
     public static LinkedList<Cubo> listaCubi = new LinkedList<>();
     private Context context;
 
-    private class Cubo{
-        int id;
-        float inizioCubo;
-        float fineCubo;
 
-        public Cubo(float inizioCubo, float fineCubo,int id){
-            this.inizioCubo = inizioCubo;
-            this.fineCubo = fineCubo;
-            this.id = id;
-        }
-
-        public int getId(){
-            return id;
-        }
-    }
 
     public ListaCubi(Context context){
         this.context = context;
@@ -69,7 +55,11 @@ public class ListaCubi {
             BufferedReader br = new BufferedReader(new InputStreamReader(context.getAssets().open("posizione_cubi.txt")));
             String line;
             while ((line =br.readLine()) != null){
-                String[] row = line.split(" -");
+                line.replaceAll("-"," ");
+                String[] row = line.split(" ");
+                for(int i=0;i<row.length;i++){
+                    System.out.println(row[i]);
+                }
                 listaCubi.add(new Cubo(Float.valueOf(row[3]), Float.valueOf(row[5]), Integer.parseInt(row[1])));
             }
         } catch (IOException e) {
@@ -110,6 +100,16 @@ public class ListaCubi {
 //        listaCubi.add(new Cubo(12.23f,213.43f));
 //        listaCubi.add(c);
 //    }
+    public String toString(){
+        int ind = 0;
+        StringBuilder sb = new StringBuilder();
+        while(ind<listaCubi.size()) {
+            System.out.println(listaCubi.get(ind).id+" --" +listaCubi.get(ind).inizioCubo + " -- " + listaCubi.get(ind).fineCubo);
+            sb.append(listaCubi.get(ind).id+" -- "+listaCubi.get(ind).inizioCubo + " -- " + listaCubi.get(ind).fineCubo);
+            ind++;
+        }
+        return sb.toString();
+    }
 
 
     public static void main(String[] args){

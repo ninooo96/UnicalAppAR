@@ -49,6 +49,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.zip.CheckedOutputStream;
 
@@ -71,6 +72,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     private Button inizio, fine;
     public PrintWriter pw;
     public int cub = 0;
+    private Cubo tmp;
 
     //Orientation
     public static SensorManager mSensorManager;
@@ -82,15 +84,21 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     private SceneView sceneView;
     private ModelRenderable cuboRenderable;
     private FileOutputStream fileOutputStream;
+    private ListaCubi lc;
+    private boolean firstPosition;
+    private ListIterator li;
+    private int notExistCube = 50;
+    private int numCubo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
-        Date d = new Date();
-        try {
+        lc = new ListaCubi(this);
+        lc.toString();
 
+        Date d = new Date();
 //            FileOutputStream os /= openFileOutput("posCubi"+d.getTime()+".txt", FileProvider.F);
 //            pw=new PrintWriter(os);
 
@@ -101,7 +109,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 //            File posCubi = new File(file,"/posCubi"+d.getTime()+".txt");
 
 
-            try {
+            /**try {
                 File file = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
                 System.out.println(Environment.getExternalStoragePublicDirectory(
@@ -116,14 +124,14 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
                 fileOutputStream = new FileOutputStream(posCubi,true);
                 System.out.println(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-                
+
 
             }  catch(FileNotFoundException ex) {
                     ex.printStackTrace();
                 }
             }  catch(IOException ex) {
                 ex.printStackTrace();
-            }
+            }*/
         inizio = findViewById(R.id.buttonInizio);
         fine = findViewById(R.id.buttonFine);
 //            pw = new PrintWriter(posCubi);
@@ -234,6 +242,54 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         test.setLatitude(39.357263);//39.357263, 16.226821
         test.setLongitude(16.226821);
         distance = location.distanceTo(inizioPonte);
+
+
+        if(distance!=0.0f && firstPosition==false) {
+            li = lc.getCubi().listIterator();
+            int ind = 0;
+            while (li.hasNext()) {
+                tmp = ((Cubo) li.next());
+                if (distance <= tmp.inizioCubo) {
+                    li.previous();
+                    tmp = (Cubo) li.previous();
+                    numCubo = tmp.id;
+                    System.out.println(numCubo + " NUMCUBO");
+                    firstPosition = true;
+                    break;
+                }
+            }
+        }
+
+
+            if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo){
+                numCubo = tmp.id;
+                System.out.println(numCubo+" NUMC 2");
+            }
+
+            if(distance < tmp.inizioCubo){
+                numCubo = notExistCube;
+                if(li.hasPrevious()){
+                    li.previous();
+                    tmp = (Cubo) li.previous();
+                }
+            }
+
+            if(distance > tmp.fineCubo) {
+                numCubo = notExistCube;
+                if (li.hasNext())
+                    tmp = (Cubo) li.next();
+            }
+//            try {
+                Toast.makeText(this, distance+" distance " + numCubo+" cubo", Toast.LENGTH_LONG).show();
+//            }catch(Exception e){
+//                System.out.println();
+//                e.printStackTrace();
+//            }
+
+
+
+
+
         bearing.setText(distance+"");
         System.out.println(distance+" Distanza dall'inizio del ponte");
         String cubo = getCubo();
