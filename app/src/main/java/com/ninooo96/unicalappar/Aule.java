@@ -17,10 +17,14 @@ public class Aule {
         init();
     }
 
+    public HashMap<String, LinkedList<String>[]> getAule(){
+        return auleMap;
+    }
+
     public void dibest(){
         if(!auleMap.containsKey("32c"))
             auleMap.put("32c", listeAule());
-        auleMap.get("32c")[4].add("CF3");
+        auleMap.get("32c")[5].add("CF3");
 
         if(!auleMap.containsKey("5c"))
             auleMap.put("5c", listeAule());
@@ -67,9 +71,9 @@ public class Aule {
 
         if(!auleMap.containsKey("32c"))
             auleMap.put("32c", listeAule());
-        auleMap.get("32c")[6].add("CF1");
-        auleMap.get("32c")[6].add("CF2");
-        auleMap.get("32c")[4].add("CF3");
+        auleMap.get("32c")[7].add("CF1");
+        auleMap.get("32c")[7].add("CF2");
+        auleMap.get("32c")[6].add("CF3");
 
         if(!auleMap.containsKey("31c"))
             auleMap.put("31c", listeAule());
@@ -88,15 +92,15 @@ public class Aule {
     public void desf(){ //economia
         if(!auleMap.containsKey("2c"))
             auleMap.put("2c", listeAule());
-        auleMap.get("2c")[4].add("Cons 1");
+        auleMap.get("2c")[7].add("Cons 1");
 
         if(!auleMap.containsKey("5b"))
             auleMap.put("5b", listeAule());
-        auleMap.get("5b")[4].add("Cons 4");
+        auleMap.get("5b")[5].add("Cons 4");
 
         if(!auleMap.containsKey("1d"))
             auleMap.put("1d", listeAule());
-        auleMap.get("1d")[0].add("EP1"); //non so il piano
+        auleMap.get("1d")[0].add("EP1");
         auleMap.get("1d")[0].add("EP2");
         auleMap.get("1d")[0].add("EP3");
         auleMap.get("1d")[0].add("EP4");
@@ -105,7 +109,7 @@ public class Aule {
 
         if(!auleMap.containsKey("13c"))
             auleMap.put("13c", listeAule());
-        auleMap.get("13c")[6].add("ZENITH 1");
+        auleMap.get("13c")[7].add("ZENITH 1");
     }
 
     public void dinci(){
@@ -124,17 +128,17 @@ public class Aule {
 
         if(!auleMap.containsKey("40b"))
             auleMap.put("40b", listeAule());
-        auleMap.get("40b")[4].add("Aula Consolidata");
+        auleMap.get("40b")[5].add("Aula Consolidata");
 
         if(!auleMap.containsKey("41b"))
             auleMap.put("41b", listeAule());
         auleMap.get("41b")[0].add("0A");
-        auleMap.get("41b")[6].add("6A - Aula Marone");
-        auleMap.get("41b")[6].add("6B - Aula Studenti");
+        auleMap.get("41b")[7].add("6A - Aula Marone");
+        auleMap.get("41b")[7].add("6B - Aula Studenti");
 
         if(!auleMap.containsKey("44b"))
             auleMap.put("44b", listeAule());
-        auleMap.get("44b")[4].add("4A");
+        auleMap.get("44b")[5].add("4A");
 
         if(!auleMap.containsKey("45b"))
             auleMap.put("45b", listeAule());
@@ -146,9 +150,9 @@ public class Aule {
     public void dimes(){
         if(!auleMap.containsKey("32b"))
             auleMap.put("32b", listeAule());
-        auleMap.get("32b")[4].add("32B1");
-        auleMap.get("32b")[6].add("32B2");
-        auleMap.get("32b")[6].add("32B3");
+        auleMap.get("32b")[5].add("32B1");
+        auleMap.get("32b")[7].add("32B2");
+        auleMap.get("32b")[7].add("32B3");
 
         if(!auleMap.containsKey("41b"))
             auleMap.put("41b", listeAule());
@@ -421,7 +425,7 @@ public class Aule {
         Collections.sort(keys);
         for (String s: keys){
             System.out.print(s+": ");
-            for (int i = 0; i<=7;i++){
+            for (int i = 0; i<=8;i++){
                 for(String aula : auleMap.get(s)[i])
                     System.out.print(aula+", ");
             }

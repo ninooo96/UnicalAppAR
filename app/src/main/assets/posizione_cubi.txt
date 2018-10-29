@@ -31,5 +31,5 @@ Cubo 41 Inizio: 1044.9387 Fine: 1065.3542
 Cubo 42 Inizio: 1068.0387 Fine: 1090.5437
 Cubo 43 Inizio: 1094.7399 Fine: 1112.7208
 Cubo 44 Inizio: 1118.5515 Fine: 1137.2222
-Cubo 45 Inizio: 1143.7212 Fine: 1165.5392
-Cubo 46 Inizio: 1168.8184 Fine: 1189.4581
+Cubo 45 Inizio: 1142.7212 Fine: 1163.5392
+Cubo 46 Inizio: 1166.8184 Fine: 1189.4581

@@ -1,59 +1,32 @@
 package com.ninooo96.unicalappar;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.ar.core.Anchor;
-import com.google.ar.core.HitResult;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.Camera;
-import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.math.Quaternion;
-import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.ux.ArFragment;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLOutput;
 import java.util.Date;
-import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
-import java.util.zip.CheckedOutputStream;
-
-import eu.bitm.NominatimReverseGeocoding.NominatimReverseGeocodingJAPI;
 
 import static android.hardware.SensorManager.AXIS_X;
 import static android.hardware.SensorManager.AXIS_Z;
@@ -87,7 +60,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     private ListaCubi lc;
     private boolean firstPosition;
     private ListIterator li;
-    private int notExistCube = 50;
+    private int notExistCube = -1;
     private int numCubo;
 
     @Override
@@ -227,10 +200,16 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
                 System.out.println("ciaoo");
 
             }
-            locationManager.requestLocationUpdates(providerId, MIN_PERIOD, MIN_DIST, this);
+            else {
+                locationManager.requestLocationUpdates(providerId, MIN_PERIOD, MIN_DIST, this);
+            }
 
         }
     }
@@ -312,8 +291,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 
     }
 
-    private void updateGUI(Location location)
-    {
+    private void updateGUI(Location location) {
         double latitude=location.getLatitude();
         double longitude=location.getLongitude();
         Location loc = new Location(LocationManager.GPS_PROVIDER);
