@@ -3,77 +3,44 @@ package com.ninooo96.unicalappar;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.hardware.Camera;
 
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
-import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.core.exceptions.UnavailableApkTooOldException;
-import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
-import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ExternalTexture;
-import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.TransformableNode;
-import com.ninooo96.unicalappar.common.rendering.BackgroundRenderer;
-//import com.ninooo96.unicalappar.common.rendering.ObjectRenderer;
-import com.ninooo96.unicalappar.common.rendering.PlaneRenderer;
-import com.ninooo96.unicalappar.common.rendering.PointCloudRenderer;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 import static android.hardware.SensorManager.AXIS_X;
 import static android.hardware.SensorManager.AXIS_Z;
@@ -108,6 +75,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     private boolean planeDetected;
     private ListaCubi lc;
     private ListIterator li;
+    private TextView nomeCubo;
     private TextView pianoT, piano1, piano2, piano3, piano4, piano5, piano6, piano7, piano8;
     private TextView auleT, aule1, aule2, aule3, aule4, aule5,aule6, aule7, aule8;
     private Aule aule;
@@ -116,7 +84,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     private double bussola;
     private int numCubo;
     private char letteraCubo='x';
-    private boolean firstPosition = false;
+    private boolean firstPosition;
     private int notExistCube = -1;
     private boolean cuboCambiato = true;
 
@@ -134,16 +102,8 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 
 
         CompletableFuture<ViewRenderable> views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
-//            System.out.println("antoniopopoo");
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//                .thenAccept(renderable -> cuboRenderable = (ViewRenderable) renderable);
         CompletableFuture.allOf(views)
                 .handle((notUsed, throwable) ->{
-//                    System.out.println(view.getNumberOfDependents());
                     try{
                         cuboRenderable = views.get();
                         System.out.println("MANNAIAAAAAA");
@@ -210,8 +170,6 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 //            piani[j].setVisibility(View.GONE);
 //        }
         aule = new Aule();
-//
-//        addViewRenderable();
 
        arFragment.setOnTapArPlaneListener(
                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
@@ -235,6 +193,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     @Override
     protected void onResume() {
         super.onResume();
+        firstPosition = true; //per fare il ricalcolo della posizione
         //Orientation
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
@@ -277,10 +236,6 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 
         //Address
         locationManager.removeUpdates(this);
-    }
-
-    private void metodo1() {
-        System.out.println("Plane detected");
     }
 
     private boolean updateHitTest(){
@@ -498,10 +453,13 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             infoCubi.setParent(anchorNode);
             infoCubi.setRenderable(cuboRenderable);
             infoCubi.onActivate();
-            infoCubi.setLocalPosition(new Vector3(0.0f, 0.8f, 0.5f));
+//            infoCubi.setLocalScale();
+            infoCubi.setLocalPosition(new Vector3(0f, 0.5f, 0f));
 //            infoCubi.select();
 //            infoCubi.
             View tmp1 = cuboRenderable.getView();
+
+            nomeCubo = tmp1.findViewById(R.id.nome_cubo);
 
             pianoT = tmp1.findViewById(R.id.pianoTerra);
             piano1 = tmp1.findViewById(R.id.piano1);
@@ -543,12 +501,14 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             Toast.makeText(this,"Non esiste questo cubo",Toast.LENGTH_LONG).show();
             return;
         }
-        while(cuboCambiato) {
-            cuboCambiato = false;//Cancellare
+        String titolo = "CUBO "+numCubo+""+ Character.toUpperCase(letteraCubo);
+
+        nomeCubo.setText(titolo);
+//        while(cuboCambiato) {
+//            cuboCambiato = false;//Cancellare
             for (int j = 0; j < piani.length; j++) {
-                System.out.println("fsdsgsd");
-                listaAule[j].setVisibility(View.GONE);
-                piani[j].setVisibility(View.GONE);
+                listaAule[j].setVisibility(View.INVISIBLE);
+                piani[j].setVisibility(View.INVISIBLE);
             }
 
             for (int i = 0; i < piani.length; i++) {
@@ -563,13 +523,13 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                 else
                     continue; //se ind==0 significa che in quel piano non ci sono aule, quindi non attivo le textview
                 piani[i].setText(sb.toString());
-                listaAule[i].setText(i + " ");
+                listaAule[i].setText("Piano "+ ((i==0)?"T":i+"") + " ");
                 piani[i].setVisibility(View.VISIBLE);
                 listaAule[i].setVisibility(View.VISIBLE);
-                Toast.makeText(this, "CIAOOOO", Toast.LENGTH_LONG);
+//                Toast.makeText(this, "CIAOOOO", Toast.LENGTH_LONG);
 //                setContentView(R.layout.info_cubo);
             }
-        }
+//        }
 
 
         fragment.getArSceneView().getScene().addChild(anchorNode);
@@ -607,13 +567,17 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                 // at this point, orientation contains the azimuth(direction), pitch and roll values.
                 bussola = 180 * orientation[0] / Math.PI;
                 System.out.println(bussola+" dirz");
-
-                if(bussola<-1 && bussola>-150)
+                String tmp = numCubo+""+letteraCubo;
+                if(bussola<-50 && bussola>-130)
                     letteraCubo='c';
-                else if(bussola>50 && bussola>150){
+                else if(bussola>50 && bussola>130){
                     letteraCubo='b';
                 }
+                else
+                    letteraCubo='x';
 
+                if(!(numCubo+""+letteraCubo).equals(tmp))
+                    Toast.makeText(this, numCubo+""+ Character.toUpperCase(letteraCubo),Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -625,14 +589,14 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 
     @Override
     public void onLocationChanged(Location location) {
-        updateGUI(location);
-        Location test = new Location(providerId);
-        test.setLatitude(39.357263);//39.357263, 16.226821
-        test.setLongitude(16.226821);
+//        updateGUI(location);
+//        Location test = new Location(providerId);
+//        test.setLatitude(39.357263);//39.357263, 16.226821
+//        test.setLongitude(16.226821);
         distance = location.distanceTo(inizioPonte);
 
 
-        if (distance != 0.0f && firstPosition == false) {
+        if (distance != 0.0f && firstPosition) {
             li = lc.getCubi().listIterator();
             while (li.hasNext()) {
                 tmp = ((Cubo) li.next());
@@ -640,17 +604,18 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                     li.previous();
                     tmp = (Cubo) li.previous();
                     numCubo = tmp.id;
-                    System.out.println(numCubo + " NUMCUBO");
-                    firstPosition = true;
+                    String tmp = numCubo+""+letteraCubo;
+                    Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
+                    firstPosition = false;
                     break;
                 }
             }
         }
 
-        if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo && cuboCambiato){
+        if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo ){//&& cuboCambiato){
             numCubo = tmp.id;
             System.out.println(numCubo+" NUMC 2");
-            cuboCambiato = true;//False
+//            cuboCambiato = false;//False
         }
 
         if(distance < tmp.inizioCubo){
@@ -658,7 +623,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             if(li.hasPrevious()){
                 li.previous();
                 tmp = (Cubo) li.previous();
-                cuboCambiato = true;
+//                cuboCambiato = true;
             }
         }
 
@@ -666,12 +631,12 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             numCubo = notExistCube;
             if (li.hasNext()) {
                 tmp = (Cubo) li.next();
-                cuboCambiato = true;
+//                cuboCambiato = true;
             }
 
         }
 //            try {
-        Toast.makeText(this, distance+" distance " + (numCubo+""+letteraCubo) +" cubo", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, distance+" distance " + (numCubo+""+letteraCubo) +" cubo", Toast.LENGTH_SHORT).show();
 //            }catch(Exception e){
 //                System.out.println();
 //                e.printStackTrace();

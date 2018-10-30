@@ -6,6 +6,13 @@
     android:orientation="vertical"
     android:clipChildren="false"
     android:clipToPadding="false" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:id="@+id/nome_cubo"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,13 +21,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule8"/>
+
         <TextView
             android:id="@+id/piano8"
-            android:layout_width="35dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
             android:padding="6dp" />
 
     </LinearLayout>
@@ -32,6 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule7" />
         <TextView
@@ -50,6 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule6" />
 
@@ -68,6 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule5" />
         <TextView
@@ -86,6 +97,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule4" />
         <TextView
@@ -104,6 +116,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule3"/>
         <TextView
@@ -122,6 +135,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule2" />
         <TextView
@@ -140,6 +154,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:text=""
             android:id="@+id/aule1" />
         <TextView
@@ -159,6 +174,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:background="@drawable/border"
             android:id="@+id/auleT"/>
         <TextView
             android:layout_width="wrap_content"
@@ -168,24 +184,5 @@
             android:padding="6dp"/>
 
     </LinearLayout>
-    <!--<SeekBar-->
-        <!--android:id="@+id/orbitSpeedBar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="4dp" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/rotationHeader"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Rotation Speed:"-->
-        <!--android:textAlignment="center"-->
-        <!--android:paddingTop="2dp" />-->
-
-    <!--<SeekBar-->
-        <!--android:id="@+id/rotationSpeedBar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="4dp" />-->
 
 </LinearLayout>

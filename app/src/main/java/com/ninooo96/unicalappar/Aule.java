@@ -25,6 +25,8 @@ public class Aule {
         if(!auleMap.containsKey("32c"))
             auleMap.put("32c", listeAule());
         auleMap.get("32c")[5].add("CF3");
+        auleMap.get("32c")[7].add("CF1");
+        auleMap.get("32c")[7].add("CF2");
 
         if(!auleMap.containsKey("5c"))
             auleMap.put("5c", listeAule());
@@ -77,7 +79,11 @@ public class Aule {
 
         if(!auleMap.containsKey("31c"))
             auleMap.put("31c", listeAule());
+        auleMap.get("31c")[0].add("A");
+        auleMap.get("31c")[0].add("B");
+        auleMap.get("31c")[0].add("C");
         auleMap.get("31c")[0].add("D");
+
 
         if(!auleMap.containsKey("30c"))
             auleMap.put("30c", listeAule());
@@ -129,6 +135,7 @@ public class Aule {
         if(!auleMap.containsKey("40b"))
             auleMap.put("40b", listeAule());
         auleMap.get("40b")[5].add("Aula Consolidata");
+        auleMap.get("40b")[7].add("Lab. Informatica");
 
         if(!auleMap.containsKey("41b"))
             auleMap.put("41b", listeAule());
@@ -145,6 +152,9 @@ public class Aule {
         auleMap.get("45b")[0].add("0A");
         auleMap.get("45b")[0].add("0B");
         auleMap.get("45b")[0].add("0C");
+        auleMap.get("45b")[5].add("PT1");
+        auleMap.get("45b")[5].add("PT2");
+        auleMap.get("45b")[5].add("PT3");
     }
 
     public void dimes(){
@@ -171,11 +181,19 @@ public class Aule {
             auleMap.put("39c", listeAule());
         auleMap.get("39c")[3].add("MOD3");
         auleMap.get("39c")[4].add("MOD4");
+        auleMap.get("39c")[1].add("MOD1A");
+        auleMap.get("39c")[1].add("MOD1B");
+        auleMap.get("39c")[2].add("MOD2A");
+        auleMap.get("39c")[2].add("MOD2B");
+        auleMap.get("39c")[2].add("MOD2C");
+        auleMap.get("39c")[2].add("MOD2D");
+        auleMap.get("39c")[2].add("MOD2E");
 
         if(!auleMap.containsKey("43b"))
             auleMap.put("43b", listeAule());
-        auleMap.get("43b")[6].add("P5");
-        auleMap.get("43b")[6].add("P6");
+        auleMap.get("43b")[7].add("P5");
+        auleMap.get("43b")[7].add("P6");
+        auleMap.get("43b")[5].add("Aula Consolidata");
 
         if(!auleMap.containsKey("42c"))
             auleMap.put("42c", listeAule());
@@ -188,26 +206,37 @@ public class Aule {
             auleMap.put("43b", listeAule());
         auleMap.get("43b")[4].add("Aula 43B");
 
+//        if(!auleMap.containsKey("45c"))
+//            auleMap.put("45c", listeAule());
+//        auleMap.get("45c")[]
+
         if(!auleMap.containsKey("43c"))
             auleMap.put("43c", listeAule());
-        auleMap.get("43c")[4].add("B");
-        auleMap.get("43c")[6].add("P3");
-        auleMap.get("43c")[6].add("P4");
+        auleMap.get("43c")[5].add("B");
+        auleMap.get("43c")[7].add("P3");
+        auleMap.get("43c")[7].add("P4");
 
         if(!auleMap.containsKey("40c"))
             auleMap.put("40c", listeAule());
-        auleMap.get("40c")[6].add("P1");
+        auleMap.get("40c")[7].add("P1");
+        auleMap.get("40c")[5].add("A");
+        auleMap.get("40c")[7].add("P2");
 
         if(!auleMap.containsKey("44c"))
             auleMap.put("44c", listeAule());
         auleMap.get("44c")[1].add("M1");
         auleMap.get("44c")[1].add("M2");
         auleMap.get("44c")[1].add("M3");
-        auleMap.get("44c")[2].add("M4");
+        auleMap.get("44c")[1].add("M4");
 
         if(!auleMap.containsKey("41b"))
             auleMap.put("41b", listeAule());
+        auleMap.get("41b")[0].add("DS3");
         auleMap.get("41b")[0].add("DS4");
+        auleMap.get("41b")[2].add("DS5");
+        auleMap.get("41b")[2].add("DS6");
+        auleMap.get("41b")[2].add("DS7");
+        auleMap.get("41b")[2].add("DS8");
     }
 
     public void diatic(){
@@ -290,7 +319,9 @@ public class Aule {
     public void dispes(){ //scienze politiche e sociali
         if(!auleMap.containsKey("29b"))
             auleMap.put("29b", listeAule());
-        auleMap.get("29b")[4].add("Danilo Dolci");
+        auleMap.get("29b")[5].add("29B - Danilo Dolci");
+        auleMap.get("29b")[7].add("29B1 - Sibilla Aleramo");
+        auleMap.get("29b")[7].add("29B2 - Costantino Mortati");
 
         if(!auleMap.containsKey("1a"))
             auleMap.put("1a", listeAule());
@@ -368,8 +399,8 @@ public class Aule {
         if(!auleMap.containsKey("28b"))
             auleMap.put("28b", listeAule());
         auleMap.get("28b")[2].add("Filol. 5");
+        auleMap.get("28b")[0].add("Filol. 8 - Mario Alcaro");
         auleMap.get("28b")[0].add("Filol. 9");
-        auleMap.get("28b")[0].add("Mario Alcaro");
 
         if(!auleMap.containsKey("19b"))
             auleMap.put("19b", listeAule());
