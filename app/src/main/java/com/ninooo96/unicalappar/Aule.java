@@ -414,8 +414,8 @@ public class Aule {
 //
 //    }
     public LinkedList[] listeAule(){
-        LinkedList[] liste = new LinkedList[8];
-        for(int i = 0; i<= 7; i++){
+        LinkedList[] liste = new LinkedList[9];
+        for(int i = 0; i<= 8; i++){
             liste[i]=new LinkedList<String>();
         }
         return liste;

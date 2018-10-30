@@ -2,6 +2,7 @@ package com.ninooo96.unicalappar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -81,7 +82,7 @@ import static android.hardware.SensorManager.remapCoordinateSystem;
 public class ARActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
     private ArFragment arFragment;
-    private ViewRenderable cuboRenderable;
+    private ViewRenderable cuboRenderable ;
 
     private static final String TAG = ARActivity.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
@@ -119,6 +120,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     private int notExistCube = -1;
     private boolean cuboCambiato = true;
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstancesState) {
         super.onCreate(savedInstancesState);
@@ -130,6 +132,28 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         //        dirZ = findViewById(R.id.directionZ);
 
+
+        CompletableFuture<ViewRenderable> views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
+//            System.out.println("antoniopopoo");
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//                .thenAccept(renderable -> cuboRenderable = (ViewRenderable) renderable);
+        CompletableFuture.allOf(views)
+                .handle((notUsed, throwable) ->{
+//                    System.out.println(view.getNumberOfDependents());
+                    try{
+                        cuboRenderable = views.get();
+                        System.out.println("MANNAIAAAAAA");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                });
 
         Location.distanceBetween(39.356235, 16.226965,39.366869, 16.225389, result);
         System.out.println("km "+result[0]);
@@ -444,15 +468,22 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 //        TransformableNode transformableNode = new TransformableNode(fragment.getTransformationSystem());
 //        transformableNode.setRenderable(renderable);
 //        transformableNode.setParent(anchorNode);
-        System.out.println("UFAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        System.out.println("UFFAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
-        ViewRenderable.builder().setView(this, R.layout.info_cubo).build()
-                .thenAccept(renderable -> cuboRenderable = renderable);
-//        CompletableFuture.allOf(view)
+//        try {
+//            CompletableFuture<ViewRenderable> views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
+////            System.out.println("antoniopopoo");
+////        } catch (InterruptedException e) {
+////            e.printStackTrace();
+////        } catch (ExecutionException e) {
+////            e.printStackTrace();
+////        }
+////                .thenAccept(renderable -> cuboRenderable = (ViewRenderable) renderable);
+//        CompletableFuture.allOf(views)
 //                .handle((notUsed, throwable) ->{
-//                    System.out.println(view.getNumberOfDependents());
+////                    System.out.println(view.getNumberOfDependents());
 //                            try{
-//                                cuboRenderable = view.get();
+//                                cuboRenderable = views.get();
 //                                System.out.println("MANNAIAAAAAA");
 //                            } catch (InterruptedException e) {
 //                                e.printStackTrace();
@@ -466,8 +497,8 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             infoCubi.setParent(arFragment.getArSceneView().getScene());
             infoCubi.setParent(anchorNode);
             infoCubi.setRenderable(cuboRenderable);
-
-            infoCubi.setLocalPosition(new Vector3(0.0f, 0.0f, 0.5f));
+            infoCubi.onActivate();
+            infoCubi.setLocalPosition(new Vector3(0.0f, 0.8f, 0.5f));
 //            infoCubi.select();
 //            infoCubi.
             View tmp1 = cuboRenderable.getView();
@@ -508,7 +539,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             /** */
 
 
-        if(!aule.getAule().containsKey("32b")) {
+        if(!aule.getAule().containsKey(numCubo+""+letteraCubo)) {
             Toast.makeText(this,"Non esiste questo cubo",Toast.LENGTH_LONG).show();
             return;
         }
@@ -523,8 +554,8 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             for (int i = 0; i < piani.length; i++) {
                 StringBuilder sb = new StringBuilder();
                 int ind = 0;
-                while (ind < aule.getAule().get("32b")[i].size()) {
-                    sb.append(aule.getAule().get("32b")[i].get(ind));
+                while (ind < aule.getAule().get(numCubo+""+letteraCubo)[i].size()) {
+                    sb.append(aule.getAule().get(numCubo+""+letteraCubo)[i].get(ind));
                     sb.append(", ");
                     ind++;
                 }
