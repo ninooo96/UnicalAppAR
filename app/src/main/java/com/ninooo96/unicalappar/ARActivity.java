@@ -87,6 +87,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     private boolean firstPosition;
     private int notExistCube = -1;
     private boolean cuboCambiato = true;
+    CompletableFuture<ViewRenderable> views;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -101,7 +102,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         //        dirZ = findViewById(R.id.directionZ);
 
 
-        CompletableFuture<ViewRenderable> views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
+        views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
         CompletableFuture.allOf(views)
                 .handle((notUsed, throwable) ->{
                     try{
@@ -175,6 +176,19 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
                 if(planeDetected==false)
                     return;
+                   views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
+                   CompletableFuture.allOf(views)
+                           .handle((notUsed, throwable) ->{
+                               try{
+                                   cuboRenderable = views.get();
+                                   System.out.println("MANNAIAAAAAA");
+                               } catch (InterruptedException e) {
+                                   e.printStackTrace();
+                               } catch (ExecutionException e) {
+                                   e.printStackTrace();
+                               }
+                               return null;
+                           });
                 addViewRenderable();
                });
 
@@ -565,19 +579,23 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                 remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
                 SensorManager.getOrientation(R, orientation);
                 // at this point, orientation contains the azimuth(direction), pitch and roll values.
-                bussola = 180 * orientation[0] / Math.PI;
+                double bussola = 180 * orientation[0] / Math.PI;
+                double pitch = 180 * orientation[1] / Math.PI;
+                double roll = 180 * orientation[2] / Math.PI;
+
+                double mag = Math.sqrt((bussola*bussola)+(pitch*pitch)+(roll*roll));
                 System.out.println(bussola+" dirz");
                 String tmp = numCubo+""+letteraCubo;
-                if(bussola<-50 && bussola>-130)
+                if(bussola<-70 && bussola>-140)
                     letteraCubo='c';
-                else if(bussola>50 && bussola>130){
+                else if(bussola>10 && bussola>80){
                     letteraCubo='b';
                 }
                 else
                     letteraCubo='x';
 
-                if(!(numCubo+""+letteraCubo).equals(tmp))
-                    Toast.makeText(this, numCubo+""+ Character.toUpperCase(letteraCubo),Toast.LENGTH_LONG).show();
+                if(!(numCubo+""+letteraCubo).equals(tmp)){}
+//                    Toast.makeText(this, numCubo+""+ Character.toUpperCase(letteraCubo),Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -614,8 +632,6 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 
         if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo ){//&& cuboCambiato){
             numCubo = tmp.id;
-            System.out.println(numCubo+" NUMC 2");
-//            cuboCambiato = false;//False
         }
 
         if(distance < tmp.inizioCubo){
@@ -635,12 +651,6 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             }
 
         }
-//            try {
-//        Toast.makeText(this, distance+" distance " + (numCubo+""+letteraCubo) +" cubo", Toast.LENGTH_SHORT).show();
-//            }catch(Exception e){
-//                System.out.println();
-//                e.printStackTrace();
-//            }
 
 
 
