@@ -302,7 +302,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         String msg="Ci troviamo in coordinate ("+latitude+","+longitude+")";
         String address = (new ReverseGeocoding(this)).getCompleteAddress(latitude, longitude);
 //        String address = (new ReverseGeocoding(this)).getAddressOSM(39.364166, 16.225764);
-        addr.setText(address);
+        addr.setText(onPath((float) latitude,(float) longitude)+"");
         /**Guardare appunti sul quadernino. loc sono le coordinate del polo nord magnetico*/
         bear = location.bearingTo(loc);
 //        bearing.setText("Bearing: "+Float.toString(bear));
@@ -368,6 +368,12 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         fileOutputStream.write(("Fine: "+distance+"\n").getBytes());
         Toast.makeText(this,"Fine", Toast.LENGTH_LONG).show();
         cub++;
+    }
+
+    public boolean onPath(float lat, float lon){
+        if(lat > 39.356235 && (lon >= 16.2252f && lon <= 16.2271f)) //, 16.226965
+            return true;
+        return false;
     }
 
 //    public void hit(View view) {

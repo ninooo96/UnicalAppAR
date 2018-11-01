@@ -537,7 +537,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                 else
                     continue; //se ind==0 significa che in quel piano non ci sono aule, quindi non attivo le textview
                 piani[i].setText(sb.toString());
-                listaAule[i].setText("Piano "+ ((i==0)?"T":i+"") + " ");
+                listaAule[i].setText(" Piano "+ ((i==0)?"T":i+"") + " ");
                 piani[i].setVisibility(View.VISIBLE);
                 listaAule[i].setVisibility(View.VISIBLE);
 //                Toast.makeText(this, "CIAOOOO", Toast.LENGTH_LONG);
@@ -614,7 +614,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         distance = location.distanceTo(inizioPonte);
 
 
-        if (distance != 0.0f && firstPosition) {
+        if (distance != 0.0f && firstPosition && onPath((float) location.getLatitude(), (float) location.getLongitude())) {
             li = lc.getCubi().listIterator();
             while (li.hasNext()) {
                 tmp = ((Cubo) li.next());
@@ -630,11 +630,11 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             }
         }
 
-        if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo ){//&& cuboCambiato){
+        if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo && onPath((float) location.getLatitude(), (float) location.getLongitude())){//&& cuboCambiato){
             numCubo = tmp.id;
         }
 
-        if(distance < tmp.inizioCubo){
+        if(distance < tmp.inizioCubo && onPath((float) location.getLatitude(), (float) location.getLongitude())){
             numCubo = notExistCube;
             if(li.hasPrevious()){
                 li.previous();
@@ -643,7 +643,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             }
         }
 
-        if(distance > tmp.fineCubo) {
+        if(distance > tmp.fineCubo && onPath((float) location.getLatitude(), (float) location.getLongitude())) {
             numCubo = notExistCube;
             if (li.hasNext()) {
                 tmp = (Cubo) li.next();
@@ -661,6 +661,12 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 //        String cubo = getCubo();
 //        Toast t = Toast.makeText(this, cubo ,Toast.LENGTH_LONG);
 //
+    }
+
+    public boolean onPath(float lat, float lon){ //return true se mi trovo sul ponte
+        if(lat > 39.356235 && (lon >= 16.2252f && lon <= 16.2271f)) //, 16.226965
+            return true;
+        return false;
     }
 
     private void updateGUI(Location location) {

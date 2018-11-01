@@ -292,7 +292,7 @@ public class OrientationActivity extends Activity implements SensorEventListener
 
 
     public void addressActivity(View view) {
-        Intent intentAddress = new Intent(OrientationActivity.this, ARActivity.class);
+        Intent intentAddress = new Intent(OrientationActivity.this, AddressActivity.class);
         startActivity(intentAddress);
     }
 }
