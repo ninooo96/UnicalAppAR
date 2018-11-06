@@ -62,6 +62,9 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     private ListIterator li;
     private int notExistCube = -1;
     private int numCubo;
+    private Sensor rotationVector;
+    private int valAzimuth;
+    private boolean oneSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,12 +124,12 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 //
 //        Camera camera = sceneView.getScene().getCamera();
 //        camera.setLocalRotation(Quaternion.axisAngle(Vector3.right(), -30.0f));
-
+        startOrientation();
         //Orientation
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-      //        dirZ = findViewById(R.id.directionZ);
+//        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+//        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+//      //        dirZ = findViewById(R.id.directionZ);
 
         //Address
 
@@ -154,14 +157,36 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 //        n.setEnabled(true);
 
     }
+    
+    private void startOrientation(){
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        if(mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null){
+            if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null || mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ==null)
+                Toast.makeText(this, "Il tuo dispositivo non è predisposto dei sensori necessari per l'orientamento", Toast.LENGTH_LONG).show();
+            else{
+                oneSensor = false;
+                accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+            }
+        }
+        else {
+            rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+            oneSensor = true;
+        }
+        }
 
     @Override
     protected void onPause() {
         super.onPause();
 //        sceneView.pause();
         //Orientation
-        mSensorManager.unregisterListener(this, accelerometer);
-        mSensorManager.unregisterListener(this, magnetometer);
+        if(!oneSensor) {
+            mSensorManager.unregisterListener(this, accelerometer);
+            mSensorManager.unregisterListener(this, magnetometer);
+        }
+        else
+            mSensorManager.unregisterListener(this, rotationVector);
 
         //Address
         locationManager.removeUpdates(this);
@@ -182,9 +207,12 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 //            e.printStackTrace();
 //        }
         //Orientation
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-
+        if(!oneSensor) {
+            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+            mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+        }
+        else
+            mSensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_UI);
         //Address
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         //activity per attivare il gps
@@ -314,33 +342,45 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // onSensorChanged gets called for each sensor so we have to remember the values
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            mAccelerometer = event.values;
+        float orientation[] = new float[3];
+        float R[] = new float[9];
+        float I[] = new float[9];
+        if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
+            SensorManager.getRotationMatrixFromVector(R, event.values);
+            remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
+            valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0])+360) % 360;
+            this.azimuth.setText(valAzimuth+" Nuovo");
+
         }
+        else {
+            // onSensorChanged gets called for each sensor so we have to remember the values
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                mAccelerometer = event.values;
+            }
 
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            mGeomagnetic = event.values;
-        }
+            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                mGeomagnetic = event.values;
+            }
 
-        if (mAccelerometer != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
+            if (mAccelerometer != null && mGeomagnetic != null) {
+//
+//            float I[] = new float[9];
+                boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
 
-            if (success) {
-                float orientation[] = new float[3];
+                if (success) {
                 remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
-                SensorManager.getOrientation(R, orientation);
-                // at this point, orientation contains the azimuth(direction), pitch and roll values.
-                double azimuth = 180 * orientation[0] / Math.PI;
-                double pitch = 180 * orientation[1] / Math.PI;
-                double roll = 180 * orientation[2] / Math.PI;
+//                    SensorManager.getOrientation(R, orientation);
+                    // at this point, orientation contains the azimuth(direction), pitch and roll values.
+//                double azimuth = 180 * orientation[0] / Math.PI;
+//                double pitch = 180 * orientation[1] / Math.PI;
+//                double roll = 180 * orientation[2] / Math.PI;
 
-                double mag = Math.sqrt((azimuth*azimuth)+(pitch*pitch)+(roll*roll));
-                System.out.println(azimuth+" dirz");
-                this.azimuth.setText(azimuth+"");
+//                double mag = Math.sqrt((azimuth*azimuth)+(pitch*pitch)+(roll*roll));
+                    valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0]) + 360) % 360;
+                    System.out.println(valAzimuth + " dirz");
+                    this.azimuth.setText(valAzimuth + " Az");
 //                dirZ.setText("Z= "+azimuth);
+                }
             }
         }
     }

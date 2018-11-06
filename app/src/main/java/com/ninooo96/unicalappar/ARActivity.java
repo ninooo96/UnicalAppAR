@@ -88,6 +88,9 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     private int notExistCube = -1;
     private boolean cuboCambiato = true;
     CompletableFuture<ViewRenderable> views;
+    private boolean oneSensor;
+    private Sensor rotationVector;
+    private int valAzimuth;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -96,11 +99,11 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         setContentView(R.layout.ar_activity);
 
         //Orientation
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        //        dirZ = findViewById(R.id.directionZ);
-
+//        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+//        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+//        //        dirZ = findViewById(R.id.directionZ);
+        startOrientation();
 
         views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
         CompletableFuture.allOf(views)
@@ -209,9 +212,12 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         super.onResume();
         firstPosition = true; //per fare il ricalcolo della posizione
         //Orientation
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-
+        if(!oneSensor) {
+            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+            mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+        }
+        else
+            mSensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_UI);
         //Address
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         //activity per attivare il gps
@@ -241,12 +247,34 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         }
     }
 
+    private void startOrientation(){
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        if(mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null){
+            if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null || mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ==null)
+                Toast.makeText(this, "Il tuo dispositivo non è predisposto dei sensori necessari per l'orientamento", Toast.LENGTH_LONG).show();
+            else{
+                oneSensor = false;
+                accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+            }
+        }
+        else {
+            rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+            oneSensor = true;
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         //Orientation
-        mSensorManager.unregisterListener(this, accelerometer);
-        mSensorManager.unregisterListener(this, magnetometer);
+        if(!oneSensor) {
+            mSensorManager.unregisterListener(this, accelerometer);
+            mSensorManager.unregisterListener(this, magnetometer);
+        }
+        else
+            mSensorManager.unregisterListener(this, rotationVector);
 
         //Address
         locationManager.removeUpdates(this);
@@ -512,7 +540,8 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 
 
         if(!aule.getAule().containsKey(numCubo+""+letteraCubo)) {
-            Toast.makeText(this,"Non esiste questo cubo",Toast.LENGTH_LONG).show();
+            if(numCubo>46 || letteraCubo=='x') Toast.makeText(this, "Non stai osservando un cubo dell'unical", Toast.LENGTH_LONG).show();
+            else Toast.makeText(this,"Non ho informazioni su questo cubo",Toast.LENGTH_LONG).show();
             return;
         }
         String titolo = "CUBO "+numCubo+""+ Character.toUpperCase(letteraCubo);
@@ -560,45 +589,62 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // onSensorChanged gets called for each sensor so we have to remember the values
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            mAccelerometer = event.values;
+        float orientation[] = new float[5];
+        float R[] = new float[9];
+        float I[] = new float[9];
+        if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
+            SensorManager.getRotationMatrixFromVector(R, event.values);
+            remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
+            valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0])+360) % 360;
+            System.out.println(valAzimuth+" Nuovo");
+
+
         }
+        else {
+            // onSensorChanged gets called for each sensor so we have to remember the values
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                mAccelerometer = event.values;
+            }
 
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            mGeomagnetic = event.values;
-        }
+            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                mGeomagnetic = event.values;
+            }
 
-        if (mAccelerometer != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
+            if (mAccelerometer != null && mGeomagnetic != null) {
+//
+//            float I[] = new float[9];
+                boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
 
-            if (success) {
-                float orientation[] = new float[3];
+                if (success) {
                 remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
-                SensorManager.getOrientation(R, orientation);
-                // at this point, orientation contains the azimuth(direction), pitch and roll values.
-                double bussola = 180 * orientation[0] / Math.PI;
-                double pitch = 180 * orientation[1] / Math.PI;
-                double roll = 180 * orientation[2] / Math.PI;
+//                    SensorManager.getOrientation(R, orientation);
+                    // at this point, orientation contains the azimuth(direction), pitch and roll values.
+//                double azimuth = 180 * orientation[0] / Math.PI;
+//                double pitch = 180 * orientation[1] / Math.PI;
+//                double roll = 180 * orientation[2] / Math.PI;
 
-                double mag = Math.sqrt((bussola*bussola)+(pitch*pitch)+(roll*roll));
-                System.out.println(bussola+" dirz");
+//                double mag = Math.sqrt((azimuth*azimuth)+(pitch*pitch)+(roll*roll));
+                    valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0]) + 360) % 360;
+                    System.out.println(valAzimuth + " dirz");
+//                    this.azimuth.setText(valAzimuth + " Az");
+//                dirZ.setText("Z= "+azimuth);
+                }
+            }
+        }
+
                 String tmp = numCubo+""+letteraCubo;
-                if(bussola<-70 && bussola>-140)
+                if(valAzimuth<300 && valAzimuth>200)
                     letteraCubo='c';
-                else if(bussola>10 && bussola>80){
+                else if(valAzimuth>30 && valAzimuth<140){
                     letteraCubo='b';
                 }
                 else
                     letteraCubo='x';
 
-                if(!(numCubo+""+letteraCubo).equals(tmp)){}
+//                if(!(numCubo+""+letteraCubo).equals(tmp)){}
 //                    Toast.makeText(this, numCubo+""+ Character.toUpperCase(letteraCubo),Toast.LENGTH_LONG).show();
             }
-        }
-    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
