@@ -10,10 +10,7 @@ public class Aule {
     public static HashMap<String, LinkedList<String>[]> auleMap;
 
     public Aule(){
-//        LinkedList<String> auleCubo = new LinkedList<>();
         auleMap = new HashMap<>();
-//        auleMap.put("0C", auleMap.get("0C"))
-//        auleMap.get("0C")[0].add("ciao");
         init();
     }
 
@@ -205,10 +202,6 @@ public class Aule {
         if(!auleMap.containsKey("43b"))
             auleMap.put("43b", listeAule());
         auleMap.get("43b")[4].add("Aula 43B");
-
-//        if(!auleMap.containsKey("45c"))
-//            auleMap.put("45c", listeAule());
-//        auleMap.get("45c")[]
 
         if(!auleMap.containsKey("43c"))
             auleMap.put("43c", listeAule());
@@ -432,18 +425,6 @@ public class Aule {
         fisica();
     }
 
-//    @Override
-//    public String toString() {
-//        for (String s: auleMap.keySet()){
-//            System.out.print(s+": ");
-//            for (int i = 0; i<=7;i++){
-//                for(String aula : auleMap.get(s)[i])
-//                    System.out.print(aula+", ");
-//            }
-//            System.out.println();
-//        }
-//
-//    }
     public LinkedList[] listeAule(){
         LinkedList[] liste = new LinkedList[9];
         for(int i = 0; i<= 8; i++){
@@ -451,6 +432,7 @@ public class Aule {
         }
         return liste;
     }
+
     public void print(){
         List<String> keys = new LinkedList<>(auleMap.keySet());
         Collections.sort(keys);
@@ -462,10 +444,5 @@ public class Aule {
             }
             System.out.println();
         }
-    }
-
-    public static void main(String[] args){
-        Aule a = new Aule();
-        a.print();
     }
 }
