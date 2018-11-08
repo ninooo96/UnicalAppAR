@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -46,7 +45,7 @@ import static android.hardware.SensorManager.AXIS_X;
 import static android.hardware.SensorManager.AXIS_Z;
 import static android.hardware.SensorManager.remapCoordinateSystem;
 
-public class ARActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
+public class ARActivity extends AppCompatActivity {//implements LocationListener, SensorEventListener {
 
     private ArFragment arFragment;
     private ViewRenderable cuboRenderable ;
@@ -57,24 +56,26 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     //Address
     public float distance;
     private String providerId = LocationManager.GPS_PROVIDER;
-    private LocationManager locationManager = null;
-    private static final int MIN_DIST = 0;
-    private static final int MIN_PERIOD = 100;
-    private float[] result = new float[1];
-    private Location inizioPonte = new Location(LocationManager.GPS_PROVIDER);
-    private Cubo tmp;
+//    private LocationManager locationManager = null;
+//    private static final int MIN_DIST = 0;
+//    private static final int MIN_PERIOD = 100;
+//    private float[] result = new float[1];
+//    private Location inizioPonte = new Location(LocationManager.GPS_PROVIDER);
+//    private Cubo tmp;
+    private Position addressClass;
 
     //Orientation
-    public static SensorManager mSensorManager;
-    public static Sensor accelerometer;
-    public static Sensor magnetometer;
-    public static float[] mAccelerometer = null;
-    public static float[] mGeomagnetic = null;
+//    public static SensorManager mSensorManager;
+//    public static Sensor accelerometer;
+//    public static Sensor magnetometer;
+//    public static float[] mAccelerometer = null;
+//    public static float[] mGeomagnetic = null;
+    private Orientation orientationClass;
 
     private boolean isTracking, isHitting;
     private boolean planeDetected;
-    private ListaCubi lc;
-    private ListIterator li;
+//    private ListaCubi lc;
+//    private ListIterator li;
     private TextView nomeCubo;
     private TextView pianoT, piano1, piano2, piano3, piano4, piano5, piano6, piano7, piano8;
     private TextView auleT, aule1, aule2, aule3, aule4, aule5,aule6, aule7, aule8;
@@ -103,8 +104,11 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 //        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 //        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 //        //        dirZ = findViewById(R.id.directionZ);
-        startOrientation();
-
+//        startOrientation();
+        addressClass = new Position(this,this);
+        orientationClass = new Orientation(this);
+        letteraCubo = orientationClass.letteraCubo;
+        numCubo = addressClass.numCubo;
         views = ViewRenderable.builder().setView(this, R.layout.info_cubo).build();
         CompletableFuture.allOf(views)
                 .handle((notUsed, throwable) ->{
@@ -119,14 +123,14 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                     return null;
                 });
 
-        Location.distanceBetween(39.356235, 16.226965,39.366869, 16.225389, result);
-        System.out.println("km "+result[0]);
-        inizioPonte.setLatitude(39.356235);
-        inizioPonte.setLongitude(16.226965);
+//        Location.distanceBetween(39.356235, 16.226965,39.366869, 16.225389, result);
+//        System.out.println("km "+result[0]);
+//        inizioPonte.setLatitude(39.356235);
+//        inizioPonte.setLongitude(16.226965);
 
-        lc = new ListaCubi(this);
-        lc.toString();
-        li = lc.getCubi().listIterator();
+//        lc = new ListaCubi(this);
+//        lc.toString();
+//        li = lc.getCubi().listIterator();
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_frag);
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
@@ -210,8 +214,10 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     @Override
     protected void onResume() {
         super.onResume();
-        firstPosition = true; //per fare il ricalcolo della posizione
-        //Orientation
+
+        orientationClass.onResume();addressClass.onResume();
+//        firstPosition = true; //per fare il ricalcolo della posizione
+       /** //Orientation
         if(!oneSensor) {
             mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
             mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
@@ -244,31 +250,33 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
                 locationManager.requestLocationUpdates(providerId, MIN_PERIOD, MIN_DIST, this);
             }
 
-        }
+        }*/
     }
 
-    private void startOrientation(){
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-        if(mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null){
-            if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null || mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ==null)
-                Toast.makeText(this, "Il tuo dispositivo non è predisposto dei sensori necessari per l'orientamento", Toast.LENGTH_LONG).show();
-            else{
-                oneSensor = false;
-                accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-                magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-            }
-        }
-        else {
-            rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-            oneSensor = true;
-        }
-    }
+//    private void startOrientation(){
+//        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+//
+//        if(mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null){
+//            if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null || mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ==null)
+//                Toast.makeText(this, "Il tuo dispositivo non è predisposto dei sensori necessari per l'orientamento", Toast.LENGTH_LONG).show();
+//            else{
+//                oneSensor = false;
+//                accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//                magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+//            }
+//        }
+//        else {
+//            rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+//            oneSensor = true;
+//        }
+//    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //Orientation
+
+        orientationClass.onPause();addressClass.onPause();
+        /**Orientation
         if(!oneSensor) {
             mSensorManager.unregisterListener(this, accelerometer);
             mSensorManager.unregisterListener(this, magnetometer);
@@ -277,13 +285,13 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             mSensorManager.unregisterListener(this, rotationVector);
 
         //Address
-        locationManager.removeUpdates(this);
+        locationManager.removeUpdates(this);*/
     }
 
     private boolean updateHitTest(){
         Frame frame = arFragment.getArSceneView().getArFrame();
         Point point = getScreenCenter();
-        List<HitResult> hits = new ArrayList<>();
+        List<HitResult> hits;
         boolean wasHitting = isHitting;
         isHitting = false;
         if(frame!=null){
@@ -539,12 +547,12 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             /** */
 
 
-        if(!aule.getAule().containsKey(numCubo+""+letteraCubo)) {
-            if(numCubo>46 || letteraCubo=='x') Toast.makeText(this, "Non stai osservando un cubo dell'unical", Toast.LENGTH_LONG).show();
-            else Toast.makeText(this,"Non ho informazioni su questo cubo",Toast.LENGTH_LONG).show();
+        if(!aule.getAule().containsKey(addressClass.numCubo+""+orientationClass.letteraCubo)) {
+            if(addressClass.numCubo>46 || orientationClass.letteraCubo=='x') Toast.makeText(this, "Non stai osservando un cubo dell'unical", Toast.LENGTH_LONG).show();
+            else Toast.makeText(this,"Non ho informazioni su questo cubo"+ addressClass.numCubo+""+orientationClass.letteraCubo,Toast.LENGTH_LONG).show();
             return;
         }
-        String titolo = "CUBO "+numCubo+""+ Character.toUpperCase(letteraCubo);
+        String titolo = "CUBO "+addressClass.numCubo+""+ Character.toUpperCase(orientationClass.letteraCubo);
 
         nomeCubo.setText(titolo);
 //        while(cuboCambiato) {
@@ -557,8 +565,8 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
             for (int i = 0; i < piani.length; i++) {
                 StringBuilder sb = new StringBuilder();
                 int ind = 0;
-                while (ind < aule.getAule().get(numCubo+""+letteraCubo)[i].size()) {
-                    sb.append(aule.getAule().get(numCubo+""+letteraCubo)[i].get(ind));
+                while (ind < aule.getAule().get(addressClass.numCubo+""+orientationClass.letteraCubo)[i].size()) {
+                    sb.append(aule.getAule().get(addressClass.numCubo+""+orientationClass.letteraCubo)[i].get(ind));
                     sb.append(", ");
                     ind++;
                 }
@@ -586,6 +594,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
 //        if(planeDetected)
             addViewRenderable();
     }
+    /**
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -633,9 +642,9 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         }
 
                 String tmp = numCubo+""+letteraCubo;
-                if(valAzimuth<300 && valAzimuth>200)
+                if(valAzimuth<300 && valAzimuth>220)
                     letteraCubo='c';
-                else if(valAzimuth>30 && valAzimuth<140){
+                else if(valAzimuth>20 && valAzimuth<100){
                     letteraCubo='b';
                 }
                 else
@@ -727,7 +736,7 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
         String address = (new ReverseGeocoding(this)).getCompleteAddress(latitude, longitude);
 //        String address = (new ReverseGeocoding(this)).getAddressOSM(39.364166, 16.225764);
 //            addr.setText(address);
-//            /**Guardare appunti sul quadernino. loc sono le coordinate del polo nord magnetico*/
+//            Guardare appunti sul quadernino. loc sono le coordinate del polo nord magnetico
 //            bear = location.bearingTo(loc);
 ////        bearing.setText("Bearing: "+Float.toString(bear));
 //            System.out.println(bear+"  "+address);
@@ -749,5 +758,5 @@ public class ARActivity extends AppCompatActivity implements LocationListener, S
     @Override
     public void onProviderDisabled(String s) {
 
-    }
+    }*/
 }

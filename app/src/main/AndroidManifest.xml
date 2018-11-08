@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature android:name="android.hardware.camera.ar"
         android:required="true"/>
     <uses-feature android:name="android.location.Geocoder"/>
@@ -26,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OrientationActivity"></activity>
+        <!--<activity android:name=".OrientationActivity"></activity>-->
         <!--<activity android:name=".AddressActivity"></activity>-->
         <!--<activity android:name=".ARActivity"></activity>-->
     </application>

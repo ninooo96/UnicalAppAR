@@ -1,6 +1,8 @@
 package com.ninooo96.unicalappar;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -28,13 +30,16 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.ListIterator;
 
+import static android.content.Context.LOCATION_SERVICE;
+import static android.content.Context.SENSOR_SERVICE;
 import static android.hardware.SensorManager.AXIS_X;
 import static android.hardware.SensorManager.AXIS_Z;
 import static android.hardware.SensorManager.remapCoordinateSystem;
 
-public class AddressActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
+public class Position /* extends AppCompatActivity */implements LocationListener/*, SensorEventListener*/ {
+    private final Aule aule;
     public float distance;
-    public TextView addr, bearing, azimuth;
+//    public TextView addr, bearing, azimuth;
     private String providerId = LocationManager.GPS_PROVIDER;
     private LocationManager locationManager = null;
     private static final int MIN_DIST = 0;
@@ -58,22 +63,27 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     private ModelRenderable cuboRenderable;
     private FileOutputStream fileOutputStream;
     private ListaCubi lc;
-    private boolean firstPosition;
+    private boolean firstPosition ;
     private ListIterator li;
     private int notExistCube = -1;
-    private int numCubo;
+    public int numCubo;
     private Sensor rotationVector;
     private int valAzimuth;
     private boolean oneSensor;
+    private Context context;
+    private Activity activity;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_address);
-
-        lc = new ListaCubi(this);
+    /*protected void onCreate(Bundle savedInstanceState)*/
+    public Position(Context context, Activity activity){
+        this.context = context;
+        this.activity = activity;
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_address);
+//
+        lc = new ListaCubi(context);
         lc.toString();
-
+        li = lc.getCubi().listIterator();
+        aule = new Aule();
         Date d = new Date();
 //            FileOutputStream os /= openFileOutput("posCubi"+d.getTime()+".txt", FileProvider.F);
 //            pw=new PrintWriter(os);
@@ -108,8 +118,8 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
             }  catch(IOException ex) {
                 ex.printStackTrace();
             }*/
-        inizio = findViewById(R.id.buttonInizio);
-        fine = findViewById(R.id.buttonFine);
+//        inizio = findViewById(R.id.buttonInizio);
+//        fine = findViewById(R.id.buttonFine);
 //            pw = new PrintWriter(posCubi);
 //            pw.println("ciaoo" );
 //
@@ -124,7 +134,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 //
 //        Camera camera = sceneView.getScene().getCamera();
 //        camera.setLocalRotation(Quaternion.axisAngle(Vector3.right(), -30.0f));
-        startOrientation();
+       /** startOrientation();*/
         //Orientation
 //        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 //        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -133,9 +143,9 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 
         //Address
 
-        addr = findViewById(R.id.address);
-        bearing = findViewById(R.id.bearing);
-        azimuth = findViewById(R.id.azimuth);
+//        addr = findViewById(R.id.address);
+//        bearing = findViewById(R.id.bearing);
+//        azimuth = findViewById(R.id.azimuth);
         Location.distanceBetween(39.356235, 16.226965,39.366869, 16.225389, result);
         System.out.println("km "+result[0]);
         inizioPonte.setLatitude(39.356235);
@@ -159,11 +169,11 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
     }
     
     private void startOrientation(){
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
 
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null){
             if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null || mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ==null)
-                Toast.makeText(this, "Il tuo dispositivo non è predisposto dei sensori necessari per l'orientamento", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Il tuo dispositivo non è predisposto dei sensori necessari per l'orientamento", Toast.LENGTH_LONG).show();
             else{
                 oneSensor = false;
                 accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -176,18 +186,17 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         }
         }
 
-    @Override
     protected void onPause() {
-        super.onPause();
+//        super.onPause();
 //        sceneView.pause();
         //Orientation
-        if(!oneSensor) {
+        /**if(!oneSensor) {
             mSensorManager.unregisterListener(this, accelerometer);
             mSensorManager.unregisterListener(this, magnetometer);
         }
         else
             mSensorManager.unregisterListener(this, rotationVector);
-
+*/
         //Address
         locationManager.removeUpdates(this);
     }
@@ -198,29 +207,29 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 
 
 
-    @Override
     protected void onResume() {
-        super.onResume();
+        firstPosition = true;
+//        super.onResume();
 //        try {
 //            sceneView.resume();
 //        } catch (CameraNotAvailableException e) {
 //            e.printStackTrace();
 //        }
         //Orientation
-        if(!oneSensor) {
+       /** if(!oneSensor) {
             mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
             mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
         }
         else
-            mSensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_UI);
+            mSensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_UI);*/
         //Address
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         //activity per attivare il gps
         if (!locationManager.isProviderEnabled(providerId)) {
             Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(gpsOptionsIntent);
+            context.startActivity(gpsOptionsIntent);
         } else {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Dai il permesso all'applicazione di usare la geolocalizzazione
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -228,7 +237,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                ActivityCompat.requestPermissions( activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
 
 //                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
@@ -244,63 +253,99 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
 
     @Override
     public void onLocationChanged(Location location) {
-        updateGUI(location);
+//        updateGUI(location);
         Location test = new Location(providerId);
         test.setLatitude(39.357263);//39.357263, 16.226821
         test.setLongitude(16.226821);
         distance = location.distanceTo(inizioPonte);
 
 
-        if(distance!=0.0f && firstPosition==false) {
+//        if(distance!=0.0f && firstPosition==false) {
+//            li = lc.getCubi().listIterator();
+//            int ind = 0;
+//            while (li.hasNext()) {
+//                tmp = ((Cubo) li.next());
+//                if (distance <= tmp.inizioCubo) {
+//                    li.previous();
+//                    tmp = (Cubo) li.previous();
+//                    numCubo = tmp.id;
+//                    System.out.println(numCubo + " NUMCUBO");
+//                    firstPosition = true;
+//                    break;
+//                }
+//            }
+//        }
+//
+//
+//            if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo){
+//                numCubo = tmp.id;
+//                System.out.println(numCubo+" NUMC 2");
+//            }
+//
+//            if(distance < tmp.inizioCubo){
+//                numCubo = notExistCube;
+//                if(li.hasPrevious()){
+//                    li.previous();
+//                    tmp = (Cubo) li.previous();
+//                }
+//            }
+//
+//            if(distance > tmp.fineCubo) {
+//                numCubo = notExistCube;
+//                if (li.hasNext())
+//                    tmp = (Cubo) li.next();
+//            }
+////            try {
+//                Toast.makeText(context, distance+" distance " + numCubo+" cubo", Toast.LENGTH_LONG).show();
+////            }catch(Exception e){
+////                System.out.println();
+////                e.printStackTrace();
+////            }
+        if (distance != 0.0f && firstPosition && onPath((float) location.getLatitude(), (float) location.getLongitude())) {
             li = lc.getCubi().listIterator();
-            int ind = 0;
             while (li.hasNext()) {
                 tmp = ((Cubo) li.next());
                 if (distance <= tmp.inizioCubo) {
                     li.previous();
                     tmp = (Cubo) li.previous();
                     numCubo = tmp.id;
-                    System.out.println(numCubo + " NUMCUBO");
-                    firstPosition = true;
+//                    String tmp = numCubo+""+letteraCubo;
+//                    Toast.makeText(context, tmp, Toast.LENGTH_LONG).show();
+                    firstPosition = false;
                     break;
                 }
             }
         }
 
+        if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo && onPath((float) location.getLatitude(), (float) location.getLongitude())){//&& cuboCambiato){
+            numCubo = tmp.id;
+        }
 
-            if(distance >= tmp.inizioCubo && distance <= tmp.fineCubo){
-                numCubo = tmp.id;
-                System.out.println(numCubo+" NUMC 2");
+        if(distance < tmp.inizioCubo && onPath((float) location.getLatitude(), (float) location.getLongitude())){
+            numCubo = notExistCube;
+            if(li.hasPrevious()){
+                li.previous();
+                tmp = (Cubo) li.previous();
+//                cuboCambiato = true;
             }
+        }
 
-            if(distance < tmp.inizioCubo){
-                numCubo = notExistCube;
-                if(li.hasPrevious()){
-                    li.previous();
-                    tmp = (Cubo) li.previous();
-                }
+        if(distance > tmp.fineCubo && onPath((float) location.getLatitude(), (float) location.getLongitude())) {
+            numCubo = notExistCube;
+            if (li.hasNext()) {
+                tmp = (Cubo) li.next();
+//                cuboCambiato = true;
             }
-
-            if(distance > tmp.fineCubo) {
-                numCubo = notExistCube;
-                if (li.hasNext())
-                    tmp = (Cubo) li.next();
-            }
-//            try {
-                Toast.makeText(this, distance+" distance " + numCubo+" cubo", Toast.LENGTH_LONG).show();
-//            }catch(Exception e){
-//                System.out.println();
-//                e.printStackTrace();
-//            }
+        }
 
 
 
 
 
-        bearing.setText(distance+"");
+//        bearing.setText(distance+"");
         System.out.println(distance+" Distanza dall'inizio del ponte");
-        String cubo = getCubo();
-        Toast t = Toast.makeText(this, cubo ,Toast.LENGTH_LONG);
+//        String cubo = getCubo();
+//        Toast t = Toast.makeText(context, cubo ,Toast.LENGTH_LONG);
 //        t.show();
     }
 
@@ -328,19 +373,19 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         loc.setLatitude(loc1); //82.420000, 114.240000 polo nord
         loc.setLongitude(loc2);
         String msg="Ci troviamo in coordinate ("+latitude+","+longitude+")";
-        String address = (new ReverseGeocoding(this)).getCompleteAddress(latitude, longitude);
+        String address = (new ReverseGeocoding(context)).getCompleteAddress(latitude, longitude);
 //        String address = (new ReverseGeocoding(this)).getAddressOSM(39.364166, 16.225764);
-        addr.setText(onPath((float) latitude,(float) longitude)+"");
+//*        addr.setText(onPath((float) latitude,(float) longitude)+"");
         /**Guardare appunti sul quadernino. loc sono le coordinate del polo nord magnetico*/
-        bear = location.bearingTo(loc);
+//        bear = location.bearingTo(loc);
 //        bearing.setText("Bearing: "+Float.toString(bear));
-        System.out.println(bear+"  "+address);
+//        System.out.println(bear+"  "+address);
 //        TextView txt= (TextView) findViewById(R.id.locationText);
 //        txt.setText(msg);
 
     }
 
-    @Override
+   /** @Override
     public void onSensorChanged(SensorEvent event) {
         float orientation[] = new float[3];
         float R[] = new float[9];
@@ -409,7 +454,7 @@ public class AddressActivity extends AppCompatActivity implements LocationListen
         Toast.makeText(this,"Fine", Toast.LENGTH_LONG).show();
         cub++;
     }
-
+*/
     public boolean onPath(float lat, float lon){
         if(lat > 39.356235 && (lon >= 16.2252f && lon <= 16.2271f)) //, 16.226965
             return true;
