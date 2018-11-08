@@ -14,8 +14,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intentOrientation = new Intent(MainActivity.this, OrientationActivity.class);
-        startActivity(intentOrientation);
+//        Intent intentOrientation = new Intent(MainActivity.this, OrientationActivity.class);
+//        startActivity(intentOrientation);
 
 
 //        WebView myWebView = (WebView) findViewById(R.id.webView);

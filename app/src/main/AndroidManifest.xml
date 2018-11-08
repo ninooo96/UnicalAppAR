@@ -27,9 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity android:name=".OrientationActivity"></activity>-->
-        <!--<activity android:name=".AddressActivity"></activity>-->
-        <!--<activity android:name=".ARActivity"></activity>-->
     </application>
 
 </manifest>

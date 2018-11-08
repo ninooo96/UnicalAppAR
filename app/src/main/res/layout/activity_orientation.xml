@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OrientationActivity">
+    tools:context=".Orientation">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,8 +44,7 @@
             app:layout_constraintTop_toTopOf="parent" />
         <Button
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="addressActivity"/>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
