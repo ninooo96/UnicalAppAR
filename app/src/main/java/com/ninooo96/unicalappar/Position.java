@@ -16,7 +16,7 @@ import java.util.ListIterator;
 import static android.content.Context.LOCATION_SERVICE;
 
 public class Position implements LocationListener{
-    private Aule aule;
+    private ListaAule aule;
     private float distance;
     private String providerId = LocationManager.GPS_PROVIDER;
     private LocationManager locationManager = null;
@@ -41,7 +41,7 @@ public class Position implements LocationListener{
         lc = new ListaCubi(context);
         lc.toString();
         li = lc.getCubi().listIterator();
-        aule = new Aule();
+        aule = new ListaAule();
 
         Location.distanceBetween(39.356235, 16.226965,39.366869, 16.225389, result);
         System.out.println("km "+result[0]);

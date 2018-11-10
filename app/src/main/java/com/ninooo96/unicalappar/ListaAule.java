@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Aule {
+public class ListaAule {
     /**key = nome cubo, value = array di linked list*/
     public static HashMap<String, LinkedList<String>[]> auleMap;
 
-    public Aule(){
+    public ListaAule(){
         auleMap = new HashMap<>();
         init();
     }
@@ -190,7 +190,7 @@ public class Aule {
             auleMap.put("43b", listeAule());
         auleMap.get("43b")[7].add("P5");
         auleMap.get("43b")[7].add("P6");
-        auleMap.get("43b")[5].add("Aula Consolidata");
+//        auleMap.get("43b")[5].add("Aula Consolidata");
 
         if(!auleMap.containsKey("42c"))
             auleMap.put("42c", listeAule());
@@ -201,7 +201,7 @@ public class Aule {
     public void dimeg(){
         if(!auleMap.containsKey("43b"))
             auleMap.put("43b", listeAule());
-        auleMap.get("43b")[4].add("Aula 43B");
+        auleMap.get("43b")[5].add("Aula 43B");
 
         if(!auleMap.containsKey("43c"))
             auleMap.put("43c", listeAule());

@@ -11,6 +11,14 @@ public class Cubo{
         this.id = id;
     }
 
+    public float getInizioCubo() {
+        return inizioCubo;
+    }
+
+    public float getFineCubo() {
+        return fineCubo;
+    }
+
     public int getId(){
         return id;
     }

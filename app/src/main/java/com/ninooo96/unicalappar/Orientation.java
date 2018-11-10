@@ -63,8 +63,8 @@ public class Orientation implements SensorEventListener {
             remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
             valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0]) + 360) % 360;
         } else {
-            // onSensorChanged gets called for each sensor so we have to remember the values
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            //il dispositivo non è dotato del ROTATION_VECTOR_SENSOR
+           if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 mAccelerometer = event.values;
             }
 
@@ -73,15 +73,13 @@ public class Orientation implements SensorEventListener {
             }
 
             if (mAccelerometer != null && mGeomagnetic != null) {
-                boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
-
-                if (success) {
-                    remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
-                    // at this point, orientation contains the azimuth(direction), pitch and roll values.
-                    valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0]) + 360) % 360;
-                }
+                SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
+                remapCoordinateSystem(R, AXIS_X, AXIS_Z, I);
+                valAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(I, orientation)[0]) + 360) % 360;
             }
         }
+
+
 
         if (valAzimuth < 300 && valAzimuth > 220)
             letteraCubo = 'c';

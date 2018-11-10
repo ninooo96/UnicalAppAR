@@ -3,8 +3,6 @@ package com.ninooo96.unicalappar;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.Point;
-import android.hardware.Sensor;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +31,7 @@ public class ARActivity extends AppCompatActivity {
 
     private ArFragment arFragment;
     private ViewRenderable cuboRenderable ;
+    private CompletableFuture<ViewRenderable> views;
 
     //Address
     private Position position;
@@ -45,13 +44,13 @@ public class ARActivity extends AppCompatActivity {
     private TextView nomeCubo;
     private TextView pianoT, piano1, piano2, piano3, piano4, piano5, piano6, piano7, piano8;
     private TextView auleT, aule1, aule2, aule3, aule4, aule5,aule6, aule7, aule8;
-    private Aule aule;
+    private ListaAule aule;
     private TextView[] piani;
     private TextView[] listaAule;
     private double bussola;
     private int numCubo;
     private char letteraCubo='x';
-    private CompletableFuture<ViewRenderable> views;
+
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -83,7 +82,7 @@ public class ARActivity extends AppCompatActivity {
                     onUpdate();
                 });
 
-        aule = new Aule();
+        aule = new ListaAule();
 
         arFragment.setOnTapArPlaneListener(
                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
@@ -222,7 +221,7 @@ public class ARActivity extends AppCompatActivity {
         listaAule[6]=aule6;listaAule[7]=aule7;listaAule[8]=aule8;
 
         if(!aule.getAule().containsKey(position.getNumCubo()+""+ orientation.getLetteraCubo())) {
-            if(position.getNumCubo()>46 || orientation.getLetteraCubo()=='x') Toast.makeText(this, "Non stai osservando un cubo dell'unical", Toast.LENGTH_LONG).show();
+            if(position.getNumCubo()>46 || orientation.getLetteraCubo()=='x') Toast.makeText(this, "Non stai inquadrando un cubo dell'Unical", Toast.LENGTH_LONG).show();
             else Toast.makeText(this,"Non ho informazioni su questo cubo"+ position.getNumCubo()+""+ orientation.getLetteraCubo(),Toast.LENGTH_LONG).show();
             return;
         }
